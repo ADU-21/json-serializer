@@ -1,4 +1,5 @@
 import java.util.Map;
+import java.util.stream.IntStream;
 
 /**
  * @author LukeDu
@@ -33,11 +34,23 @@ public class Main {
             "   }\n" +
             "}";
 
+        // warm up
+        IntStream.range(0, 100000).forEach(__ -> new GsonFlatter().parse(json));
 
-        final Map<String, String> result1 = new JacksonFlatter().flat(json);
-        System.out.println(result1);
+        // test
+        final long startTime1 = System.currentTimeMillis();
+        IntStream.range(0, 100000).forEach(__ -> new GsonFlatter().parse(json));
+        final long endTime1 = System.currentTimeMillis();
+        System.out.println("Gson Run time: " + (endTime1 - startTime1) + "ms");
 
-        final Map<String, String> result2 = new GsonFlatter().parse(json);
-        System.out.println(result2);
+        // warm up
+        IntStream.range(0, 100000).forEach(__ -> new JacksonFlatter().flat(json));
+
+        // test
+        final long startTime = System.currentTimeMillis();
+        IntStream.range(0, 100000).forEach(__ -> new JacksonFlatter().flat(json));
+        final long endTime = System.currentTimeMillis();
+        System.out.println("Jackson Run time: " + (endTime - startTime) + "ms");
+
     }
 }
